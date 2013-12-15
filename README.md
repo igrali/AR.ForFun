@@ -8,4 +8,8 @@ It has been tested on Nokia Lumia 920 device and works *awesome*!
 
 This repo includes both the modified GART and the sample project to demonstrate how it works.
 
+<a href="http://youtu.be/tZOPNPpeQKA" target="_blank"><img src="http://img.youtube.com/vi/tZOPNPpeQKA/0.jpg" 
+alt="GART with Nokia Imaging SDK" width="240" height="180" border="10" /></a>
+
+
 Enjoy and have **fun**!
