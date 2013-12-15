@@ -30,15 +30,15 @@ namespace Gart_WP8
 
                 GeoCoordinate offset = new GeoCoordinate()
                 {
-                    Latitude = currentLocation.Latitude + ((double)rand.Next(-60, 60)) / 100000,
-                    Longitude = currentLocation.Longitude + ((double)rand.Next(-60, 60)) / 100000,
+                    Latitude = currentLocation.Latitude + ((double)rand.Next(-90, 90)) / 100000,
+                    Longitude = currentLocation.Longitude + ((double)rand.Next(-90, 90)) / 100000,
                     Altitude = Double.NaN // NaN will keep it on the horizon
                 };
 
                 locationsTvrda.Add(new CityPlace()
                 {
                     GeoLocation = offset,
-                    Content = "Lorem ipsum " + 1,
+                    Content = "Lorem ipsum " + i,
                     Description = "Quisque tincidunt lorem vitae porta gravida. Nullam vitae suscipit risus, sit amet sagittis arcu. In elementum lacinia turpis, vel commodo eros consequat nec. Nam vitae tristique metus, a sagittis nibh. Etiam id purus vel elit egestas semper ac ac ipsum. Etiam id commodo ligula, quis ultrices nibh. "
                 });
             }
@@ -53,14 +53,7 @@ namespace Gart_WP8
                 Description = "Spomenik Presvetom Trojstvu - sa svecima Sv. Sebastionom, Sv.Rokom, Sv. Rozalijom i Sv. Katarinom - podignut je 1729. do 1730. godine u središtu Tvrđe kao zavjetni spomenik da se Bog smiluje i da odvrati kugu koja je harala u Osijeku i u cijeloj Slavoniji"
             });
 
-            //AddNearbyLabels();
-
             ardisplay.ARItems = locationsTvrda;
-        }
-
-        private void AddNearbyLabels()
-        {
-            
         }
 
         protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
@@ -100,11 +93,6 @@ namespace Gart_WP8
             UIHelper.ToggleVisibility(overheadMap);
         }
 
-        /// <summary>
-        /// To support any orientation, override this method and call
-        /// ARDisplay.HandleOrientationChange() method
-        /// </summary>
-        /// <param name="e"></param>
         protected override void OnOrientationChanged(OrientationChangedEventArgs e)
         {
             base.OnOrientationChanged(e);

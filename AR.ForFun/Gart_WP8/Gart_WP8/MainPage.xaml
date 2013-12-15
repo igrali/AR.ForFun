@@ -26,20 +26,20 @@
         
     </phone:PhoneApplicationPage.Resources>
     <!--LayoutRoot is the root grid where all page content is placed-->
-<Grid x:Name="LayoutRoot">
-    <gart:ARDisplay Name="ardisplay" AttitudeRefreshRate="50" MovementThreshold="10">
-        <gart:VideoPreview x:Name="videoPreview" Canvas.ZIndex="1"/>
-        <gart:OverheadMap x:Name="overheadMap" Canvas.ZIndex="2" Credentials="{StaticResource Credentials}"/>
-        <gart:WorldView x:Name="worldView" Canvas.ZIndex="3" ItemTemplate="{StaticResource CityItemTemplate}"  MinItemScale="0.1" MaxItemScale="1.0" FarClippingPlane="300.0" NearClippingPlane="1.0"/>
-        <gart:HeadingIndicator x:Name="headingIndicator" Canvas.ZIndex="4" Width="100" Height="100" HorizontalAlignment="Right" VerticalAlignment="Top"/>
-    </gart:ARDisplay>
-</Grid>
+    <Grid x:Name="LayoutRoot">
+        <gart:ARDisplay Name="ardisplay" AttitudeRefreshRate="50" MovementThreshold="10">
+            <gart:VideoPreview x:Name="videoPreview" Canvas.ZIndex="1"/>
+            <gart:OverheadMap x:Name="overheadMap" Canvas.ZIndex="2" Credentials="{StaticResource Credentials}"/>
+            <gart:WorldView x:Name="worldView" Canvas.ZIndex="3" ItemTemplate="{StaticResource CityItemTemplate}"  MinItemScale="0.1" MaxItemScale="1.0" FarClippingPlane="300.0" NearClippingPlane="1.0"/>
+            <gart:HeadingIndicator x:Name="headingIndicator" Canvas.ZIndex="4" Width="100" Height="100" HorizontalAlignment="Right" VerticalAlignment="Top"/>
+        </gart:ARDisplay>
+    </Grid>
 
-<phone:PhoneApplicationPage.ApplicationBar>
-    <shell:ApplicationBar IsVisible="True" IsMenuEnabled="False">
-        <shell:ApplicationBarIconButton x:Name="nextButton" IconUri="/Images/arrow.png" Text="next filter" Click="next_Click"/>
-        <shell:ApplicationBarIconButton x:Name="mapButton" IconUri="/Images/map2.png" Text="map" Click="mapButton_Click"/>
-        <shell:ApplicationBarIconButton x:Name="worldButton" IconUri="/Images/eye.png" Text="world" Click="world_on_off_Click"/>
-    </shell:ApplicationBar>
-</phone:PhoneApplicationPage.ApplicationBar>
+    <phone:PhoneApplicationPage.ApplicationBar>
+        <shell:ApplicationBar IsVisible="True" IsMenuEnabled="False">
+            <shell:ApplicationBarIconButton x:Name="nextButton" IconUri="/Images/arrow.png" Text="next filter" Click="next_Click"/>
+            <shell:ApplicationBarIconButton x:Name="mapButton" IconUri="/Images/map2.png" Text="map" Click="mapButton_Click"/>
+            <shell:ApplicationBarIconButton x:Name="worldButton" IconUri="/Images/eye.png" Text="world" Click="world_on_off_Click"/>
+        </shell:ApplicationBar>
+    </phone:PhoneApplicationPage.ApplicationBar>
 </phone:PhoneApplicationPage>

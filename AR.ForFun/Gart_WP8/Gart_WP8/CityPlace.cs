@@ -7,24 +7,24 @@ using System.Threading.Tasks;
 
 namespace Gart_WP8
 {
-public class CityPlace : ARItem
-{
-    private string description;
- 
-    public string Description
+    public class CityPlace : ARItem
     {
-        get
+        private string description;
+ 
+        public string Description
         {
-            return description;
-        }
-        set
-        {
-            if (description != value)
+            get
             {
-                description = value;
-                NotifyPropertyChanged(() => Description);
+                return description;
+            }
+            set
+            {
+                if (description != value)
+                {
+                    description = value;
+                    NotifyPropertyChanged(() => Description);
+                }
             }
         }
     }
-}
 }
