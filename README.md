@@ -8,6 +8,8 @@ It has been tested on Nokia Lumia 920 device and works *awesome*!
 
 This repo includes both the modified GART and the sample project to demonstrate how it works.
 
+Don't forget to read the article which explains it all [on Nokia Developer Wiki site](http://developer.nokia.com/Community/Wiki/Augmented_reality_for_fun_using_Nokia_Imaging_SDK_filters)
+
 <a href="http://youtu.be/tZOPNPpeQKA" target="_blank"><img src="http://img.youtube.com/vi/tZOPNPpeQKA/0.jpg" 
 alt="GART with Nokia Imaging SDK" width="240" height="180" border="10" /></a>
 
