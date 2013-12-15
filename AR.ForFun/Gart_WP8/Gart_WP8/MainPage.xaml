@@ -1,0 +1,45 @@
+﻿<phone:PhoneApplicationPage
+    x:Class="Gart_WP8.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
+    xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:gart="clr-namespace:GART.Controls;assembly=AR.ForFun.Library"
+    mc:Ignorable="d"
+    FontFamily="{StaticResource PhoneFontFamilyNormal}"
+    FontSize="{StaticResource PhoneFontSizeNormal}"
+    Foreground="{StaticResource PhoneForegroundBrush}"
+    SupportedOrientations="PortraitOrLandscape" Orientation="Portrait"
+    shell:SystemTray.IsVisible="True">
+
+    <phone:PhoneApplicationPage.Resources>
+    <DataTemplate x:Key="CityItemTemplate">
+        <Border BorderBrush="Black" BorderThickness="4" Background="#FF003847" Width="320" Canvas.ZIndex="5">
+            <StackPanel Margin="4">
+                <TextBlock x:Name="NameBlock" TextWrapping="NoWrap" Text="{Binding Content}" FontSize="38" VerticalAlignment="Center" Margin="0,0,4,0"  Grid.Column="1" TextTrimming="WordEllipsis"/>
+                <TextBlock x:Name="DescriptionBlock" TextWrapping="Wrap" Text="{Binding Description}" FontSize="24" VerticalAlignment="Center" Margin="0,0,4,0" Grid.Column="1" TextTrimming="WordEllipsis" MaxHeight="168"/>
+            </StackPanel>
+        </Border>
+    </DataTemplate>
+        
+    </phone:PhoneApplicationPage.Resources>
+    <!--LayoutRoot is the root grid where all page content is placed-->
+<Grid x:Name="LayoutRoot">
+    <gart:ARDisplay Name="ardisplay" AttitudeRefreshRate="50" MovementThreshold="10">
+        <gart:VideoPreview x:Name="videoPreview" Canvas.ZIndex="1"/>
+        <gart:OverheadMap x:Name="overheadMap" Canvas.ZIndex="2" Credentials="{StaticResource Credentials}"/>
+        <gart:WorldView x:Name="worldView" Canvas.ZIndex="3" ItemTemplate="{StaticResource CityItemTemplate}"  MinItemScale="0.1" MaxItemScale="1.0" FarClippingPlane="300.0" NearClippingPlane="1.0"/>
+        <gart:HeadingIndicator x:Name="headingIndicator" Canvas.ZIndex="4" Width="100" Height="100" HorizontalAlignment="Right" VerticalAlignment="Top"/>
+    </gart:ARDisplay>
+</Grid>
+
+<phone:PhoneApplicationPage.ApplicationBar>
+    <shell:ApplicationBar IsVisible="True" IsMenuEnabled="False">
+        <shell:ApplicationBarIconButton x:Name="nextButton" IconUri="/Images/arrow.png" Text="next filter" Click="next_Click"/>
+        <shell:ApplicationBarIconButton x:Name="mapButton" IconUri="/Images/map2.png" Text="map" Click="mapButton_Click"/>
+        <shell:ApplicationBarIconButton x:Name="worldButton" IconUri="/Images/eye.png" Text="world" Click="world_on_off_Click"/>
+    </shell:ApplicationBar>
+</phone:PhoneApplicationPage.ApplicationBar>
+</phone:PhoneApplicationPage>
