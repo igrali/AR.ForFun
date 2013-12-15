@@ -17,69 +17,68 @@ namespace AR.ForFun.Library.Controls
 {
     public class FrameStreamSource : MediaStreamSource
     {
-        private readonly Dictionary<MediaSampleAttributeKeys, string> _emptyAttributes = new Dictionary<MediaSampleAttributeKeys, string>();
+        private readonly Dictionary<MediaSampleAttributeKeys, string> emptyAttributes = new Dictionary<MediaSampleAttributeKeys, string>();
 
-        private MediaStreamDescription _videoStreamDescription = null;
-        private MemoryStream _frameStream = null;
+        private MediaStreamDescription videoStreamDescription = null;
+        private MemoryStream frameStream = null;
 
-        private Size _frameSize = new Size(0, 0);
-        private int _frameBufferSize = 0;
-        private byte[] _frameBuffer = null;
+        private Size frameSize = new Size(0, 0);
+        private int frameBufferSize = 0;
+        private byte[] frameBuffer = null;
         private PhotoCaptureDevice photoCaptureDevice;
         private CameraPreviewImageSource cameraPreviewImageSource;
-        private ObservableCollection<LiveFilter> _liveFilters;
+        private ObservableCollection<LiveFilter> liveFilters;
 
-        private IFilter _activeFilter;
-        private int _currentFilterIndex = 0;
+        private IFilter activeFilter;
+        private int currentFilterIndex = 0;
 
         public FrameStreamSource(PhotoCaptureDevice pcd, ObservableCollection<LiveFilter> liveFilters)
         {
-            photoCaptureDevice = pcd;
-            var smallestPreview = photoCaptureDevice.PreviewResolution;
-            _liveFilters = liveFilters;
-            if (_liveFilters == null || _liveFilters.Count == 0)
+            this.photoCaptureDevice = pcd;
+            var smallestPreview = this.photoCaptureDevice.PreviewResolution;
+            this.liveFilters = liveFilters;
+            if (this.liveFilters == null || this.liveFilters.Count == 0)
             {
-                _activeFilter = null;
+                this.liveFilters = new ObservableCollection<LiveFilter>();
             }
-            else
-            {
-                _currentFilterIndex = 0;
-                _liveFilters.Insert(0, LiveFilter.None);
-                ConvertFilterEnumToIFilter(_liveFilters[_currentFilterIndex]);
-            }
+
+            this.liveFilters.Insert(0, LiveFilter.None);
+            currentFilterIndex = 0;
+            ConvertFilterEnumToIFilter(this.liveFilters[currentFilterIndex]);
+            
             cameraPreviewImageSource = new CameraPreviewImageSource(photoCaptureDevice);
-            _frameSize = new Size(smallestPreview.Width / 2, smallestPreview.Height / 2);
-            _frameBufferSize = (int)_frameSize.Width * (int)_frameSize.Height * 4; // RGBA
-            _frameBuffer = new byte[_frameBufferSize];
-            _frameStream = new MemoryStream(_frameBuffer);
+            frameSize = new Size(smallestPreview.Width / 2, smallestPreview.Height / 2);
+            frameBufferSize = (int)frameSize.Width * (int)frameSize.Height * 4; // RGBA
+            frameBuffer = new byte[frameBufferSize];
+            frameStream = new MemoryStream(frameBuffer);
         }
 
         protected override void CloseMedia()
         {
-            if (_frameStream != null)
+            if (frameStream != null)
             {
-                _frameStream.Close();
-                _frameStream = null;
+                frameStream.Close();
+                frameStream = null;
             }
 
             cameraPreviewImageSource = null;
             photoCaptureDevice = null;
-            _frameBufferSize = 0;
-            _frameBuffer = null;
-            _videoStreamDescription = null;
+            frameBufferSize = 0;
+            frameBuffer = null;
+            videoStreamDescription = null;
         }
 
         protected override void GetSampleAsync(MediaStreamType mediaStreamType)
         {
-            var task = GetNewFrameAndApplyChosenEffectAsync(_frameBuffer.AsBuffer());
+            var task = GetNewFrameAndApplyChosenEffectAsync(frameBuffer.AsBuffer());
 
             task.ContinueWith((action) =>
             {
-                if (_frameStream != null)
+                if (frameStream != null)
                 {
-                    _frameStream.Position = 0;
+                    frameStream.Position = 0;
 
-                    var sample = new MediaStreamSample(_videoStreamDescription, _frameStream, 0, _frameBufferSize, 0, _emptyAttributes);
+                    var sample = new MediaStreamSample(videoStreamDescription, frameStream, 0, frameBufferSize, 0, emptyAttributes);
 
                     ReportGetSampleCompleted(sample);
 
@@ -89,12 +88,12 @@ namespace AR.ForFun.Library.Controls
 
         private async Task GetNewFrameAndApplyChosenEffectAsync(IBuffer buffer)
         {
-            var scanlineByteSize = (uint)_frameSize.Width * 4;
-            var bitmap = new Bitmap(_frameSize, ColorMode.Bgra8888, scanlineByteSize, buffer);
+            var lineSize = (uint)frameSize.Width * 4;
+            var bitmap = new Bitmap(frameSize, ColorMode.Bgra8888, lineSize, buffer);
 
             IFilter[] filters;
 
-            if (_activeFilter == null)
+            if (activeFilter == null)
             {
                 filters = new IFilter[0];
             }
@@ -102,7 +101,7 @@ namespace AR.ForFun.Library.Controls
             {
                 filters = new IFilter[]
                 {
-                    _activeFilter
+                    activeFilter
                 };
             }
 
@@ -136,13 +135,13 @@ namespace AR.ForFun.Library.Controls
             var mediaStreamAttributes = new Dictionary<MediaStreamAttributeKeys, string>();
 
             mediaStreamAttributes[MediaStreamAttributeKeys.VideoFourCC] = "RGBA";
-            mediaStreamAttributes[MediaStreamAttributeKeys.Width] = ((int)_frameSize.Width).ToString();
-            mediaStreamAttributes[MediaStreamAttributeKeys.Height] = ((int)_frameSize.Height).ToString();
+            mediaStreamAttributes[MediaStreamAttributeKeys.Width] = ((int)frameSize.Width).ToString();
+            mediaStreamAttributes[MediaStreamAttributeKeys.Height] = ((int)frameSize.Height).ToString();
 
-            _videoStreamDescription = new MediaStreamDescription(MediaStreamType.Video, mediaStreamAttributes);
+            videoStreamDescription = new MediaStreamDescription(MediaStreamType.Video, mediaStreamAttributes);
 
             var mediaStreamDescriptions = new List<MediaStreamDescription>();
-            mediaStreamDescriptions.Add(_videoStreamDescription);
+            mediaStreamDescriptions.Add(videoStreamDescription);
 
             var mediaSourceAttributes = new Dictionary<MediaSourceAttributesKeys, string>();
             mediaSourceAttributes[MediaSourceAttributesKeys.Duration] = TimeSpan.FromSeconds(0).Ticks.ToString(CultureInfo.InvariantCulture);
@@ -153,15 +152,15 @@ namespace AR.ForFun.Library.Controls
 
         public void NextFilter()
         {
-            if (_currentFilterIndex == _liveFilters.Count - 1)
+            if (currentFilterIndex == liveFilters.Count - 1)
             {
-                _currentFilterIndex = 0;
+                currentFilterIndex = 0;
             }
             else
             {
-                _currentFilterIndex++;
+                currentFilterIndex++;
             }
-            ConvertFilterEnumToIFilter(_liveFilters[_currentFilterIndex]);
+            ConvertFilterEnumToIFilter(liveFilters[currentFilterIndex]);
 
         }
 
@@ -170,55 +169,55 @@ namespace AR.ForFun.Library.Controls
             switch (liveFilter)
             {
                 case LiveFilter.None:
-                    _activeFilter = null;
+                    activeFilter = null;
                     break;
                 case LiveFilter.Antique:
-                    _activeFilter = new AntiqueFilter();
+                    activeFilter = new AntiqueFilter();
                     break;
                 case LiveFilter.AutoEnhance:
-                    _activeFilter = new AutoEnhanceFilter();
+                    activeFilter = new AutoEnhanceFilter();
                     break;
                 case LiveFilter.AutoLevels:
-                    _activeFilter = new AutoLevelsFilter();
+                    activeFilter = new AutoLevelsFilter();
                     break;
                 case LiveFilter.Cartoon:
-                    _activeFilter = new CartoonFilter();
+                    activeFilter = new CartoonFilter();
                     break;
                 case LiveFilter.ColorBoost:
-                    _activeFilter = new ColorBoostFilter();
+                    activeFilter = new ColorBoostFilter();
                     break;
                 case LiveFilter.Grayscale:
-                    _activeFilter = new GrayscaleFilter();
+                    activeFilter = new GrayscaleFilter();
                     break;
                 case LiveFilter.Lomo:
-                    _activeFilter = new LomoFilter();
+                    activeFilter = new LomoFilter();
                     break;
                 case LiveFilter.MagicPen:
-                    _activeFilter = new MagicPenFilter();
+                    activeFilter = new MagicPenFilter();
                     break;
                 case LiveFilter.Negative:
-                    _activeFilter = new NegativeFilter();
+                    activeFilter = new NegativeFilter();
                     break;
                 case LiveFilter.Noise:
-                    _activeFilter = new NoiseFilter();
+                    activeFilter = new NoiseFilter();
                     break;
                 case LiveFilter.Oily:
-                    _activeFilter = new OilyFilter();
+                    activeFilter = new OilyFilter();
                     break;
                 case LiveFilter.Paint:
-                    _activeFilter = new PaintFilter();
+                    activeFilter = new PaintFilter();
                     break;
                 case LiveFilter.Sketch:
-                    _activeFilter = new SketchFilter();
+                    activeFilter = new SketchFilter();
                     break;
                 case LiveFilter.Vignetting:
-                    _activeFilter = new VignettingFilter();
+                    activeFilter = new VignettingFilter();
                     break;
                 case LiveFilter.WhiteboardEnhancement:
-                    _activeFilter = new WhiteboardEnhancementFilter();
+                    activeFilter = new WhiteboardEnhancementFilter();
                     break;
                 default:
-                    _activeFilter = null;
+                    activeFilter = null;
                     break;
             }
         }

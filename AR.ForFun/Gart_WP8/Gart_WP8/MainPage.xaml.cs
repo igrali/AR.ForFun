@@ -31,8 +31,7 @@ namespace Gart_WP8
                 GeoCoordinate offset = new GeoCoordinate()
                 {
                     Latitude = currentLocation.Latitude + ((double)rand.Next(-90, 90)) / 100000,
-                    Longitude = currentLocation.Longitude + ((double)rand.Next(-90, 90)) / 100000,
-                    Altitude = Double.NaN // NaN will keep it on the horizon
+                    Longitude = currentLocation.Longitude + ((double)rand.Next(-90, 90)) / 100000
                 };
 
                 locationsTvrda.Add(new CityPlace()
